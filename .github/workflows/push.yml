@@ -10,7 +10,11 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    
     steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        
       - run: cd app/
       - run: make setup
       - run: make ci
