@@ -27,6 +27,5 @@ jobs:
           file: ./Dockerfile.production
           push: true
           tags: z3nyk3y/devops-for-programmers-project-74:latest
-    needs: test
 
 
