@@ -2,10 +2,34 @@ version: "3"
 services:
 
   app:
+    image: z3nyk3y/devops-for-programmers-project-74
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8080:8080"
     volumes:
       - ./app:/app
+    command: make dev
+    ports: 
+      - "8080:8080"
+    networks:
+      - app_net
+    
+  caddy:
+    image: caddy:2.10.0-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./services/caddy/:/etc/caddy/
+    depends_on: 
+      - app
+    networks:
+      - app_net
+
+volumes:
+  caddy_data:
+  caddy_config:
+
+networks:
+  app_net:
+    driver: bridge

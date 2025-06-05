@@ -2,7 +2,35 @@ version: "3"
 services:
 
   app:
-    image: z3nyk3y/devops-for-programmers-project-74
     build:
       context: .
       dockerfile: Dockerfile.production
+    # ports:
+    #   - "8080:8080"
+    volumes:
+      - ./app:/app
+    depends_on:
+      - db
+
+  db:
+    image: postgres
+    restart: always
+    # set shared memory limit when using docker compose
+    shm_size: 128mb
+    # or set shared memory limit when deploy via swarm stack
+    #volumes:
+    #  - type: tmpfs
+    #    target: /dev/shm
+    #    tmpfs:
+    #      size: 134217728 # 128*2^20 bytes = 128Mb
+    environment:
+      POSTGRES_HOST_AUTH_METHOD: trust
+    #   POSTGRES_DB: ${DATABASE_NAME}
+    #   POSTGRES_USER: ${DATABASE_USERNAME}
+    #   POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
